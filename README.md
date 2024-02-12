@@ -1,6 +1,6 @@
 # Mazemerise-cpp - a maze generator and solver written in C++
 ___
-Mazemerise is a time and memory-efficient maze generator and solver written in C++. It contains no external libraries and uses the .pgm image format to output images. Mazemerise is licenced under GNU GPL 3.0.
+Mazemerise is a time and memory-efficient maze generator and solver written in C++. It contains no external libraries and uses the .pgm image format to output images. Info about the program's design can be found in the source code itself, which is thoroughly commented with brief, intuitive explanations. Mazemerise is licenced under GNU GPL 3.0.
 ### Examples
 50 x 50:\
 ![An image of a randomly-generated 50 x 50 grid.](examples/50x50.png)
