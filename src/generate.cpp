@@ -10,24 +10,22 @@ struct point {
     point (int i, int j) : x(i), y(j) {}
 };
 
-enum colour {white = false, black = true}; // enum that matches the .pbm format
+enum colour {black = 0, white = 2}; // enum that matches the .pgm format - here the .pgm format is used instead of .pbm so that the maze solver program (which uses a .pbm output) may more easily read from the maze
 
 struct point_data {
-    bool unvisited = true, colour = black;
-    int neighbours = 0;
+    bool unvisited = true;
+    int neighbours = 0, colour = black;
 };
 
-enum dir {left = 0, up = 1, right = 2, down = 3};
-
-int main(int argc, char** argv) {
-    const int width = atoi(argv[1]), height = atoi(argv[2]);
+int main(int argc, char** argv) { // input order: output file directory, width of desired maze, height of desired maze
+    const int width = atoi(argv[2]), height = atoi(argv[3]);
 
     if (width <= 0 || height <= 0) {
         cerr << "Error: dimensions entered are non-positive. Please enter positive dimensions.\n";
         return 0;
     }
 
-    srand(time(0)); // since we'll only require integer random values and we're not concerned with slightly imperfect distributions, it suffices to use the rand() function from the C standard library instead of anything from the C++11 <random> header.
+    srand(time(0)); // since we'll only require integer random values and we're not concerned with slightly skewed distributions, it suffices to use the rand() function from the C standard library instead of anything from the C++11 <random> header.
 
     vector<vector<point_data>> lookup (height, vector<point_data>(width));
 
@@ -39,7 +37,7 @@ int main(int argc, char** argv) {
 
         while (!s.empty()) {
             auto& x = s.top().x,
-                y = s.top().y;
+                  y = s.top().y;
 
             {
                 auto& p_data = lookup[y][x];
@@ -79,9 +77,9 @@ int main(int argc, char** argv) {
             lookup[y][x].colour = white;
     }
 
-    ofstream img ("img.pbm");
+    ofstream img (argv[1]);
 
-    img << "P1\n" << width + 2 << ' ' << height + 2 << '\n'; // we're adding 2 to each of the dimensions as part of our black border
+    img << "P2\n" << width + 2 << ' ' << height + 2 << "\n2\n"; // we're adding 2 to each of the dimensions as part of our black border
 
     img << black << ' ' << white << ' '; // set up the black border on top, ensuring that the top-left pixel has an entrance above it
     for (int i = 0; i < width; ++i)
