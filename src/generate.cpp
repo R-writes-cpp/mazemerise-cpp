@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
     const int width = atoi(argv[1]), height = atoi(argv[2]);
 
     if (width <= 0 || height <= 0) {
-        cerr << "Error: dimensions entered are non-positive.\n";
+        cerr << "Error: dimensions entered are non-positive. Please enter positive dimensions.\n";
         return 0;
     }
 
@@ -47,48 +47,35 @@ int main(int argc, char** argv) {
                 p_data.colour = white;
             }
 
-            vector<int> possible_directions {};
+            vector<point> possible_points {};
+            possible_points.reserve(4);
 
             if (x != 0 && lookup[y][x-1].neighbours++ == (backtracking ? 1 : 0) && (backtracking || lookup[y][x-1].unvisited)) // the order here matters. first of all, we need to make sure x != 0 so that the program doesn't segfault when we access the left neighbour pixel. second of all we need to increment the neighbours count of the current pixel, assuming it exists, then check if we're either backtracking or that the left neighbour pixel is unvisited. if we do the unvisited check before the neighbours check we won't increment the neighbours counter, which leads to invalid mazes.
-                possible_directions.push_back(dir::left);
+                possible_points.push_back({x-1, y});
 
             if (y != 0 && lookup[y-1][x].neighbours++ == (backtracking ? 1 : 0) && (backtracking || lookup[y-1][x].unvisited))
-                possible_directions.push_back(up);
+                possible_points.push_back({x, y-1});
 
             if (x != width - 1 && lookup[y][x+1].neighbours++ == (backtracking ? 1 : 0) && (backtracking || lookup[y][x+1].unvisited))
-                possible_directions.push_back(dir::right);
+                possible_points.push_back({x+1, y});
 
             if (y != height - 1 && lookup[y+1][x].neighbours++ == (backtracking ? 1 : 0) && (backtracking || lookup[y+1][x].unvisited))
-                possible_directions.push_back(down);
+                possible_points.push_back({x, y+1});
 
-            if (possible_directions.size()) { // if there's directions we can continue in...
-                backtracking = false;
-                switch (possible_directions[rand() % possible_directions.size()]) { // select a random direction available to us, push it to the top of the stack and mark it as visited
-                    case dir::left:
-                        s.push({x - 1, y}),
-                        lookup[y][x-1].unvisited = false;
-                        break;
-                    case up:
-                        s.push({x, y - 1}),
-                        lookup[y-1][x].unvisited = false;
-                        break;
-                    case dir::right:
-                        s.push({x + 1, y}),
-                        lookup[y][x+1].unvisited = false;
-                        break;
-                    case down:
-                        s.push({x, y + 1}),
-                        lookup[y+1][x].unvisited = false;
-                }
+            if (possible_points.size()) { // if there's directions we can continue in...
+                auto& next_point = possible_points[rand() % possible_points.size()]; // select a random point out of our options
+                s.push(next_point), // push it onto the stack, where it'll be the next point we visit
+                lookup[next_point.y][next_point.x].unvisited = false,
+                backtracking = false; // disable backtracking mode
             } else // if we're at a dead end (i.e. there's no pixels we can move to) ...
-                backtracking = true,
-                s.pop();
+                s.pop(),
+                backtracking = true; // enable backtracking mode to go back through the stack
         }
     }
 
-    if (lookup[height - 1][width - 1].colour == black) { // if the path generated has arranged the bottom-right pixel as
+    if (lookup[height - 1][width - 1].colour == black) { // if the path generated has arranged the bottom-right pixel as black...
         bool move_y = rand() % 2;
-        for (size_t y = height - 1, x = width - 1; x && y && lookup[y][x].colour == black; move_y ? --y : --x)
+        for (size_t y = height - 1, x = width - 1; x && y && lookup[y][x].colour == black; move_y ? --y : --x) // we'll "tunnel through" either the pixels above it or the pixels to the left of it so that we can reach the end
             lookup[y][x].colour = white;
     }
 
