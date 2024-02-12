@@ -2,6 +2,8 @@
 ___
 Mazemerise is a time and memory-efficient maze generator and solver written in C++. It contains no external libraries and uses the .pgm image format to output images. Info about the program's design can be found in the source code itself, which is thoroughly commented with brief, intuitive explanations. Mazemerise is licenced under GNU GPL 3.0.
 ### Examples
+The images below show the sole path solutions for some mazes both generated and solved with the program. These are the optimal and only routes for their respective mazes.
+
 50 x 50:\
 ![An image of a randomly-generated 50 x 50 grid.](examples/50x50.png)
 ![An image of a randomly-generated 50 x 50 grid. The solution path is highlighted in grey.](examples/50x50_solved.png)
