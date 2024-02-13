@@ -11,7 +11,7 @@ struct point {
     point (int i, int j) : x(i), y(j) {}
 };
 
-enum colour {black = 0, grey = 1, white = 2}; // we'll be using the .pbm format here - black pixels represent maze walls, white pixels represent potential paths, grey pixels represent the path from the start to the end
+enum colour {black = 0, grey = 1, white = 2}; // we'll be using the .pgm format here - black pixels represent maze walls, white pixels represent potential paths, and grey pixels represent the path from the start to the end of the maze
 
 struct point_data {
     bool leads_to_dead_end = false;
@@ -23,12 +23,12 @@ int main(int argc, char** argv) { // input order: input file directory, output f
     int width, height; // these represent the width and height of the maze, excluding its border
 
     {
-        ifstream img (argv[1]);
+        ifstream img (argv[1]); // input .pgm image
         string str;
-        getline (img, str), getline (img, str); // skips the first line "P1" and moves onto the second line with the dimensions of the image
+        getline (img, str), getline (img, str); // skips the first line "P2" and moves onto the second line with the dimensions of the image
 
         try {
-            int img_width; // represent the width of the original image, including its border. a different variable is used for clarity.
+            int img_width; // represents the width of the original image, including its border. a variable different from "width" is used for clarity.
             size_t i = str.find_first_of(' ');
             img_width = stoi (str, &i);
             str.reserve (2 * img_width); // max length of each row from now on will be 2 times the width (including the spacing between each pixel and the line break)
@@ -100,7 +100,7 @@ int main(int argc, char** argv) { // input order: input file directory, output f
         }
     }
 
-    ofstream img (argv[2]);
+    ofstream img (argv[2]); // output image
 
     img << "P2\n" << width + 2 << ' ' << height + 2 << "\n2\n"; // 3 different greyscale values means we have black, grey and white (represented by 0, 1 and 2 respectively). this is all we need.
 

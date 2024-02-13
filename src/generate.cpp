@@ -10,7 +10,7 @@ struct point {
     point (int i, int j) : x(i), y(j) {}
 };
 
-enum colour {black = 0, white = 2}; // enum that matches the .pgm format - here the .pgm format is used instead of .pbm so that the maze solver program (which uses a .pbm output) may more easily read from the maze
+enum colour {black = 0, white = 2}; // enum that matches the .pgm format - here the .pgm format is used instead of .pbm so that the maze solver program (which uses a .pgm output) may more easily read from the maze
 
 struct point_data {
     bool unvisited = true;
